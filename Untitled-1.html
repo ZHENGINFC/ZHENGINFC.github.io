@@ -232,7 +232,7 @@
         // 内测1的算法
         result = (((intValue / 7) + 93962945) / 63 / 5 / 685 / 43 - 12) / 58;
         if (!Number.isInteger(result)) { // 判断激活码是否为整数
-            alert("您输入的设备码有误，，请检查内测版本"); // 如果不是，则显示设备码错误
+            alert("您输入的设备码有误，请检查内测版本"); // 如果不是，则显示设备码错误
             return;
         }
         document.getElementById("activation-code-1").innerHTML = result;
