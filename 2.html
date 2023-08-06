@@ -45,7 +45,7 @@
         }
 
         input[type="submit"], input[type="button"] {
-            width: 100%;
+            width: 49%;
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -83,6 +83,11 @@
        #qrcode {
            display:inline-block;
        }
+       
+       .button-container {
+           display:flex;
+           justify-content:space-between;
+       }
    </style>
 </head>
 <body>
@@ -93,7 +98,10 @@
 方法二：点击手环里的设置，点击系统，点击关于，里面的蓝牙地址即是蓝牙mac地址</p>
        <label for="mac">请输入蓝牙MAC地址:</label><br>
        <input type="text" id="mac" name="mac" placeholder="例如：A1:B2:C3:D4:E5:F6"><br><br>
-       <input type="submit" value="提交">
+       <div class="button-container">
+           <input type="submit" value="提交">
+           <input type="button" value="救砖教程" onclick="window.location.href='4.html'">
+       </div>
    </form> 
    <p id="result"></p>
    <div id="qrcode"></div>
@@ -106,8 +114,21 @@
    <script>
        document.getElementById("form").addEventListener("submit", function(event){
            event.preventDefault()
+           
+           // Validate MAC address
            let mac = document.getElementById("mac").value
+           if (mac.length === 0) {
+               alert("请输入");
+               return;
+           }
+           
            mac = mac.replace(/:/g, "")
+           
+           if (mac.length !== 12) {
+               alert("请检查mac地址");
+               return;
+           }
+           
            let url = "https://api-watch.huami.com/forwarding/watchUS?redir=7800&mac="+mac+"&pnpNumber=117&pnpVersion=259"
            document.getElementById("result").innerHTML = "结果:"
            document.getElementById("result").appendChild(document.createElement("div")).className = "result"
