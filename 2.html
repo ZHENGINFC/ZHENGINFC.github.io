@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MAC地址转换</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #000000;
+            text-align: center;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+            }
+        }
+
+        label {
+            color: #000000;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color:#000000; 
+            color:white; 
+            font-weight:bold; 
+        }
+
+        p {
+            color:#000000; 
+            text-align:center; 
+            margin-top:20px; 
+        }
+
+        .result {
+           width:auto; 
+           margin:auto; 
+           padding:10px; 
+           border-radius:5px; 
+           background-color:white; 
+           word-wrap:break-word; 
+       }
+
+       .result a, #qrcode a {
+           display:inline-block; 
+           padding:10px; 
+           border:none; 
+           border-radius:5px; 
+           background-color:#000000; 
+           color:white; 
+           font-weight:bold; 
+           text-decoration:none; 
+       }
+   </style>
+</head>
+<body>
+   <h1>MAC地址转换</h1>
+   <form id="form">
+       <p>如何找到手环蓝牙MAC 地址？<br>
+方法一：打开zepp life，点击我的，在我的设备中点击自己的手环，下拉点击关于本机，里面的蓝牙地址即是蓝牙mac地址<br>
+方法二：点击手环里的设置，点击系统，点击关于，里面的蓝牙地址即是蓝牙mac地址</p>
+       <label for="mac">请输入蓝牙MAC地址:</label><br>
+       <input type="text" id="mac" name="mac" placeholder="例如：A1:B2:C3:D4:E5:F6"><br><br>
+       <input type="submit" value="提交">
+   </form> 
+   <p id="result"></p>
+   <p id="qrcode"></p>
+
+   <footer>
+       ©2023 来自infc
+   </footer>
+
+   <script>
+       document.getElementById("form").addEventListener("submit", function(event){
+           event.preventDefault()
+           let mac = document.getElementById("mac").value
+           mac = mac.replace(/:/g, "")
+           let url = "https://api-watch.huami.com/forwarding/watchUS?redir=7800&mac="+mac+"&pnpNumber=117&pnpVersion=259"
+           document.getElementById("result").innerHTML = "结果:"
+           document.getElementById("result").appendChild(document.createElement("div")).className = "result"
+           document.querySelector(".result").innerHTML = url
+           document.getElementById("qrcode").innerHTML = ""
+           document.getElementById("qrcode").appendChild(document.createElement("a")).href = "https://cli.im/api/qrcode/code?text="+url
+           document.querySelector("#qrcode a").innerHTML = "生成二维码"
+       });
+   </script>
+</body>
+</html>
