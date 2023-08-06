@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" href="https://assets-global.website-files.com/628df74e46000da7f1f53a36/62984f20244c289f0d5d4ad5_20220602-134745.png" type="image/png">
+
     <title>MAC地址转换</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        
         body {
             background-color: #FFFFFF;
             font-family: Arial, sans-serif;
@@ -41,7 +44,7 @@
             box-sizing: border-box;
         }
 
-        input[type="submit"] {
+        input[type="submit"], input[type="button"] {
             width: 100%;
             padding: 10px;
             border: none;
@@ -76,6 +79,10 @@
            font-weight:bold; 
            text-decoration:none; 
        }
+       
+       #qrcode {
+           display:inline-block;
+       }
    </style>
 </head>
 <body>
@@ -89,12 +96,13 @@
        <input type="submit" value="提交">
    </form> 
    <p id="result"></p>
-   <p id="qrcode"></p>
+   <div id="qrcode"></div>
 
    <footer>
        ©2023 来自infc
    </footer>
 
+   <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
    <script>
        document.getElementById("form").addEventListener("submit", function(event){
            event.preventDefault()
@@ -104,9 +112,29 @@
            document.getElementById("result").innerHTML = "结果:"
            document.getElementById("result").appendChild(document.createElement("div")).className = "result"
            document.querySelector(".result").innerHTML = url
-           document.getElementById("qrcode").innerHTML = ""
-           document.getElementById("qrcode").appendChild(document.createElement("a")).href = "https://cli.im/api/qrcode/code?text="+url
-           document.querySelector("#qrcode a").innerHTML = "生成二维码"
+           
+           // Clear previous QR code
+           document.getElementById("qrcode").innerHTML = "";
+           
+           // Generate QR code
+           let qrcode = new QRCode(document.getElementById("qrcode"), {
+               text: url,
+               width: 128,
+               height: 128,
+               colorDark : "#000000",
+               colorLight : "#ffffff",
+               correctLevel : QRCode.CorrectLevel.H
+           });
+           
+           // Add copy button
+           let copyButton = document.createElement("input");
+           copyButton.type = "button";
+           copyButton.value = "复制结果";
+           copyButton.onclick = function() {
+               navigator.clipboard.writeText(url);
+               alert("复制成功");
+           }
+           document.getElementById("result").appendChild(copyButton);
        });
    </script>
 </body>

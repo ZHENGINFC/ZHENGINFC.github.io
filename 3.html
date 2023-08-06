@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>地址转换二维码</title>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+    <h1>地址转换二维码</h1>
+    <input type="text" id="url" placeholder="请输入网址">
+    <button onclick="generateQRCode()">生成二维码</button>
+    <div id="qrcode"></div>
+
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.Q
+        });
+
+        function generateQRCode() {
+            var url = document.getElementById("url").value;
+            qrcode.clear();
+            qrcode.makeCode(url);
+        }
+    </script>
+</body>
+</html>
