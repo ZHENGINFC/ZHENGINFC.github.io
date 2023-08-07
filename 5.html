@@ -5,8 +5,11 @@
 </head>
 <body>
 
-    <input type='file' onchange="readURL(this);" id="inputFile" accept = "image/png, image/jpeg"/>
+    <button id="btnCamera">启用摄像头</button>
+    <button id="btnFile">选择文件</button>
+    <input type='file' onchange="readURL(this);" id="inputFile" accept = "image/png, image/jpeg" style="display:none"/>
     <img id="qrCode" src="#" alt="your QR Code" />
+    <video id="preview" width="160" height="120" autoplay muted></video>
 
     <script>
         function readURL(input) {
@@ -18,6 +21,17 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        $('#btnCamera').click(function() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    document.querySelector('#preview').srcObject = stream;
+                });
+        });
+
+        $('#btnFile').click(function() {
+            $('#inputFile').click();
+        });
     </script>
 
 </body>
