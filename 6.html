@@ -1,0 +1,239 @@
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-top: 100px;
+        }
+
+        p {
+            font-size: 24px;
+        }
+
+        button {
+            background-color: white; /* 底色为白色 */
+            border: none; /* 去掉边框 */
+            color: black; /* 字色为黑色 */
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 10px; /* 增加一个圆角属性 */
+        }
+
+        select {
+            font-size: 24px;
+            margin-top: 50px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 50px;
+        }
+
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>触摸或者按下空格</h1>
+    <p id="message" class="hidden">累计点击次数：0</p>
+    <button id="button">开始</button>
+    <p id="timer" class="hidden">10秒</p>
+    <select id="select">
+        <option value="100">100秒</option>
+        <option value="60">60秒</option>
+        <option value="30">30秒</option> <!-- 新增的选项 -->
+        <option value="14">14秒</option> <!-- 新增的选项 -->
+        <option value="10" selected>10秒</option>
+        <option value="5">5秒</option>
+        <option value="3">3秒</option>
+        <option value="1">1秒</option> <!-- 新增的选项 -->
+    </select>
+    <!-- 在网页的底部添加一个表格 -->
+    <table id="record-table">
+      <!-- 添加表头 -->
+      <thead>
+        <tr>
+          <th>次数</th>
+          <th>秒数</th>
+          <th>点击次数</th>
+        </tr>
+      </thead>
+      <!-- 添加表体 -->
+      <tbody>
+        <!-- 表体内容将由JavaScript动态生成 -->
+      </tbody>
+    </table>
+    <script>
+        // 获取网页中的元素
+        var message = document.getElementById("message");
+        var button = document.getElementById("button");
+        var timer = document.getElementById("timer");
+        var select = document.getElementById("select");
+        var recordTable = document.getElementById("record-table"); // 获取表格元素
+
+        // 定义一个变量，用来存储计数值
+        var count = 0;
+
+        // 定义一个变量，用来存储倒计时的秒数
+        var seconds = 10;
+
+        // 定义一个变量，用来存储倒计时的间隔
+        var interval = null;
+
+        // 定义一个变量，用来存储记录的次数
+        var recordCount = 0;
+
+        // 定义一个变量，用来标记是否开始倒计时
+        var started = false; // 新增的变量
+
+        // 定义一个函数，用来显示或者隐藏消息
+        function toggleMessage() {
+            // 如果没有开始倒计时，就不做任何操作
+            if (!started) { // 新增的判断条件
+                return;
+            }
+            // 如果消息是隐藏的，就显示它，否则就隐藏它
+            // 删除以下两行代码
+            /*
+            if (message.classList.contains("hidden")) {
+                message.classList.remove("hidden");
+            } else {
+                message.classList.add("hidden");
+            }
+            */
+            // 更新计数值
+            count++;
+            // 显示计数值在网页上
+            message.innerHTML = "累计点击次数：" + count; 
+        }
+
+        // 定义一个函数，用来开始倒计时
+        function startCountdown() {
+            // 如果倒计时已经开始，就不做任何操作
+            if (interval) {
+                return;
+            }
+            // 隐藏按钮
+            button.classList.add("hidden");
+            // 显示倒计时
+            timer.classList.remove("hidden");
+            // 设置倒计时的间隔，每秒执行一次
+            interval = setInterval(function() {
+                // 如果秒数大于0，就减一
+                if (seconds > 0) {
+                    seconds--;
+                    // 显示秒数在网页上
+                    timer.innerHTML = seconds + "秒";
+                } else {
+                    // 否则，清除倒计时的间隔
+                    clearInterval(interval);
+                    // 隐藏倒计时
+                    timer.classList.add("hidden");
+                    // 显示触发的次数在网页上
+                    message.innerHTML = "这是你在" + select.value + "秒内触发了" + count + "次。";
+                    // 显示消息
+                    message.classList.remove("hidden");
+                    // 调用添加记录的函数
+                    addRecord();
+                    // 重置倒计时的秒数
+                    seconds = Number(select.value);
+                    // 重置倒计时的间隔
+                    interval = null;
+                    // 重置开始标记为false
+                    started = false; 
+                    // 调用重置按钮的函数 
+                    resetButton();
+                }
+            }, 1000);
+            // 设置开始标记为true
+            started = true; 
+            count = 0; // 增加一行代码，用来重置计数值为零
+        }
+
+        // 定义一个函数，用来更新倒计时的秒数
+        function updateSeconds() {
+            // 获取下拉菜单的选中值，并转换为数字类型
+            seconds = Number(select.value);
+        }
+
+        // 定义一个函数，用来添加记录到表格中
+        function addRecord() {
+            // 更新记录的次数
+            recordCount++;
+            // 创建一个新的表格行元素
+            var tr = document.createElement("tr");
+            // 创建三个新的表格单元元素，并设置它们的文本内容为相应的数据
+            var td1 = document.createElement("td");
+            td1.textContent = recordCount;
+            var td2 = document.createElement("td");
+            td2.textContent = select.value;
+            var td3 = document.createElement("td");
+            td3.textContent = count;
+            // 把三个表格单元元素添加到表格行元素中
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            // 把表格行元素添加到表格体元素中
+            recordTable.tBodies[0].appendChild(tr);
+        }
+
+        // 定义一个函数，用来重置开始按钮的状态
+        function resetButton() {
+            // 显示按钮
+            button.classList.remove("hidden");
+            // 设置按钮的文本内容为开始
+            button.textContent = "开始";
+            // 设置按钮的点击事件为开始倒计时的函数
+            button.onclick = startCountdown;
+        }
+
+        // 监听网页的触摸事件
+        document.addEventListener("touchstart", function(event) {
+            // 阻止默认的触摸行为，比如滚动或者缩放
+            event.preventDefault();
+            // 调用切换消息的函数
+            toggleMessage();
+        });
+
+        // 监听网页的键盘事件
+        document.addEventListener("keydown", function(event) {
+            // 如果按下的键是空格键
+            if (event.code === "Space") {
+                // 阻止默认的空格键行为，比如滚动
+                event.preventDefault();
+                // 调用切换消息的函数
+                toggleMessage();
+            }
+        });
+
+        // 监听按钮的点击事件
+        button.addEventListener("click", function(event) {
+            // 调用开始倒计时的函数
+            startCountdown();
+        });
+
+        // 监听下拉菜单的改变事件
+        select.addEventListener("change", function(event) {
+            // 调用更新秒数的函数
+            updateSeconds();
+        });
+    </script>
+</body>
+</html>
