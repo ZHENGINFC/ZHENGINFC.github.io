@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 固定按钮样式 */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #d3d3d3; /* 浅灰色背景 */
+            color: #000; /* 黑色文字 */
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease;
+        }
+        .back-button:hover {
+            background-color: #b0b0b0; /* 悬停时颜色略深 */
+        }
+        .back-button::before {
+            content: '←'; /* 向左的箭头符号 */
+            margin-right: 8px; /* 箭头和文字之间的间距 */
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://zhenginfc.github.io/1.html" class="back-button">返回主页</a>
+
+
+
+
+
+
+    <link rel="icon" href="https://assets-global.website-files.com/628df74e46000da7f1f53a36/62984f20244c289f0d5d4ad5_20220602-134745.png" type="image/png">
+
+    <title>MAC地址转换</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+        body {
+            background-color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #000000;
+            text-align: center;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+            }
+        }
+
+        label {
+            color: #000000;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"], input[type="button"] {
+            width: 49%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color:#000000; 
+            color:white; 
+            font-weight:bold; 
+        }
+
+        p {
+            color:#000000; 
+            text-align:center; 
+            margin-top:20px; 
+        }
+
+        .result {
+           width:auto; 
+           margin:auto; 
+           padding:10px; 
+           border-radius:5px; 
+           background-color:white; 
+           word-wrap:break-word; 
+       }
+
+       .result a, #qrcode a {
+           display:inline-block; 
+           padding:10px; 
+           border:none; 
+           border-radius:5px; 
+           background-color:#000000; 
+           color:white; 
+           font-weight:bold; 
+           text-decoration:none; 
+       }
+       
+       #qrcode {
+           display:inline-block;
+       }
+       
+       .button-container {
+           display:flex;
+           justify-content:space-between;
+       }
+   </style>
+</head>
+<body>
+   <h1>MAC地址转换（转换为Zepp可用）</h1>
+   <form id="form">
+       <p>如何找到手环蓝牙MAC 地址？<br>
+方法一：打开Zepp Life，点击我的，在我的设备中点击自己的手环，下拉点击关于本机，里面的蓝牙地址即是蓝牙mac地址<br>
+方法二：点击手环里的设置，点击系统，点击关于，里面的蓝牙地址即是蓝牙mac地址<br>
+方法三：使用草料二维码扫描手环上的二维码，解码成功后即可看到一串mac地址</p>
+       <label for="mac">请输入蓝牙MAC地址:</label><br>
+       <input type="text" id="mac" name="mac" placeholder="例如：A1:B2:C3:D4:E5:F6"><br><br>
+       <div class="button-container">
+           <input type="submit" value="提交">
+           <input type="button" value="救砖教程" onclick="window.location.href='4.html'">
+       </div>
+   </form> 
+   <p id="result"></p>
+   <div id="qrcode"></div>
+
+   <footer>
+       ©2023-2024 来自INFC
+   </footer>
+
+   <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+   <script>
+       document.getElementById("form").addEventListener("submit", function(event){
+           event.preventDefault()
+           
+           // Validate MAC address
+           let mac = document.getElementById("mac").value
+           if (mac.length === 0) {
+               alert("请输入");
+               return;
+           }
+           
+           mac = mac.replace(/:/g, "")
+           
+           if (mac.length !== 12) {
+               alert("请检查mac地址");
+               return;
+           }
+           
+           let url = "https://api-watch.huami.com/forwarding/watchUS?redir=7800&mac="+mac+"&pnpNumber=117&pnpVersion=259"
+           document.getElementById("result").innerHTML = "结果:"
+           document.getElementById("result").appendChild(document.createElement("div")).className = "result"
+           document.querySelector(".result").innerHTML = url
+           
+           // Clear previous QR code
+           document.getElementById("qrcode").innerHTML = "";
+           
+           // Generate QR code
+           let qrcode = new QRCode(document.getElementById("qrcode"), {
+               text: url,
+               width: 128,
+               height: 128,
+               colorDark : "#000000",
+               colorLight : "#ffffff",
+               correctLevel : QRCode.CorrectLevel.H
+           });
+           
+           // Add copy button
+           let copyButton = document.createElement("input");
+           copyButton.type = "button";
+           copyButton.value = "复制结果";
+           copyButton.onclick = function() {
+               navigator.clipboard.writeText(url);
+               alert("复制成功");
+           }
+           document.getElementById("result").appendChild(copyButton);
+       });
+
+   </script>
+</body>
+</html>
